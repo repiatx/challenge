@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Challenge</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+            integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+            crossorigin="anonymous"></script>
+
+    <script src="./js/axios.min.js"></script>
+    <script src="./js/socket.io.min.js"></script>
+
+    <link rel="stylesheet" href="./style/style.css">
+    <!------ Include the above in your HEAD tag ---------->
+</head>
+<body>
+
+<div class="container LOGIN page">
+    <div class="row">
+
+        <div class="col-md-6 login-form-1">
+            <h3>Login</h3>
+            <form>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="loginEmail" placeholder="Your Email *" value=""/>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" id="loginPassword" placeholder="Your Password *"
+                           value=""/>
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btnSubmit" id="loginButton" value="Login"/>
+                </div>
+
+                <p id="loginError" class="d-none">Hatalı kullanıcı adı şifre</p>
+
+                <div class="form-group">
+                    <a href="#" class="ForgetPwd" id="registerPageClick">Register</a>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="container REGISTER page d-none">
+    <div class="row">
+
+        <div class="col-md-6 login-form-1">
+            <div class="form-group">
+                <a href="#" class="ForgetPwd" id="registerPageBackClick">< Back</a>
+            </div>
+            <h3>Register</h3>
+            <form>
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Your Full Name *" value=""
+                           id="registerFullname"/>
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-control" placeholder="Your Email *" value="" id="registerEmail"/>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" placeholder="Your Password *"
+                           value="" id="registerPassword"/>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" placeholder="Your Password Repeat *"
+                           value="" id="registerPasswordRepeat"/>
+                </div>
+
+                <div class="form-group">
+                    <select class="custom-select" id="registerLanguage">
+                        <option selected>Language</option>
+                        <option value="tr">Türkçe</option>
+                        <option value="en">English</option>
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+                    <select class="custom-select" id="registerCountry">
+                        <option selected>Country</option>
+                        <option value="tr">Türkiye</option>
+                        <option value="en_us">America</option>
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+                    <p id="registerError" class="d-none">Hata</p>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" class="btnSubmit" value="Register" id="registerButton"/>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<div class="container LOGGED_IN page d-none">
+
+    <div class="row">
+
+
+        <div class="col-md-6 login-form-1">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#" id="loginPageClick">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="userListPageClick">User List</a>
+                    </li>
+                </ul>
+            </nav>
+            <h3>User Status Log</h3>
+            <ul class="list-group" id="onlineUser">
+            </ul>
+        </div>
+
+
+    </div>
+</div>
+
+<div class="container USER_LIST page d-none">
+    <div class="row">
+
+        <div class="col-md-10 login-form-1">
+            <div class="form-group">
+                <a href="#" class="ForgetPwd" id="userListPageBack">< Back</a>
+            </div>
+            <h3>Online User List Page</h3>
+            <table class="table" id="onlineUserTable">
+                <thead>
+                <tr>
+                    <th scope="col">id</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Detail</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<div class="container USER_DETAIL page d-none">
+    <div class="row">
+
+        <div class="col-md-10 login-form-1">
+            <div class="form-group">
+                <a href="#" class="ForgetPwd" id="userDetailPageBack">< Back</a>
+            </div>
+            <h3>User Detail</h3>
+            <table class="table" id="userDetailTable">
+                <thead>
+                <tr>
+                    <th scope="col">id</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Status</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<script src="./js/main.js" type="module"></script>
+</body>
+</html>
+
+
