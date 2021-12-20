@@ -7,7 +7,7 @@ const ApiError = require('../dtos/ApiError')
 
 const catchAsync = require('../libs/catchAsync')
 
-const Auth =  catchAsync(async (req, res, next) => {
+const Auth = catchAsync(async (req, res, next) => {
 
   const jwt = req.headers['authorization']
 

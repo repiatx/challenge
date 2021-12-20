@@ -12,8 +12,8 @@ router.post('/users/login', UserController.Login)
 
 router.get('/users', Auth, UserController.UserList)
 router.post('/users', UserController.RegisterUser)
-router.get('/users/:userId', Auth, UserController.UserDetail)
 router.get('/users/logout', Auth, UserController.LogOut)
+router.get('/users/:userId', Auth, UserController.UserDetail)
 
 
 module.exports = router

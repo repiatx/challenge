@@ -10,6 +10,8 @@ const addRequestId = require('express-request-id')()
 
 const {errorConverter, errorHandler} = require('./middlewares/error')
 
+require('./services/SocketService')
+
 const userRoute = require('./routes/v1/user.route')
 
 const ApiError = require('./dtos/ApiError')

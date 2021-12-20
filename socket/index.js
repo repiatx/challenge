@@ -1,89 +1,81 @@
 require('dotenv').config()
-const axios = require('axios')
-
 const server = require('http').createServer()
-const io = require('socket.io')(server, {
-  cors: {
-    origin: '*'
-  }
-})
-
+const io = require('socket.io')(server, {cors: {origin: '*'}})
 
 const enums = require('./libs/enums')
 
-const requester = axios.create({
-  baseURL: process.env.BACKEND_URL
-})
+const SocketService = require('./services/SocketService')
+const BackendService = require('./services/BackendService')
+
 
 io.on('connection', client => {
-  console.log('guest connected')
 
+  //guest connected
+  client.on('event', onClientData)
+  client.on('disconnect', onClientDisconnected)
 
-  client.on('event', event => {
+  function onClientData(event) {
 
-    // const jsonData = JSON.parse(event)
 
     switch (event.type) {
-      case enums.event_types.LOGIN:
-        const config = {
-          url: '/v1/users/login',
-          method: 'POST',
-          data: event.data
-        }
-        return requester.request(config)
+      case enums.incoming_event_types.LOGIN:
+
+        const email = event.data.email
+        const password = event.data.password
+        return BackendService.login(email, password)
             .then(response => {
-              client.emit('event', {
-                type: enums.event_types.LOGIN_RESPONSE,
-                data: response.data
-              })
-              client.join('users')
-              console.log('client joined users')
+
+              SocketService.sendLoginResponse(client, response.data)
+              //user Joined to room
+              SocketService.joinUsersRoom(client)
+
+              SocketService.notifyOtherUsersThatIHaveLoggedIn(client)
+
+              SocketService.notifyOnlineUsersChanged(io)
+
               client.token = response.data.token
-              client.to('users').emit('event', {
-                type: enums.event_types.LOGGED_IN
-              })
+
 
             })
             .catch(response => {
 
-              client.emit('event', {
-                type: enums.event_types.LOGIN_RESPONSE,
-                error: response.response.data
-              })
+              SocketService.sendLoginErrorResponse(client, response.response?.data)
 
             })
+      case enums.incoming_event_types.SEND_EVENT:
+        // There might be a special authentication for Backend
+        const data = {
+          type: event.data.event_type,
+          data: event.data.data
+        }
+
+        const room = event.data.room
+        io.to(room).emit('event', data)
     }
 
-    console.log(event)
 
+  }
 
-  })
-  client.on('disconnect', () => {
-
-    console.log('client disconnected')
-
+  function onClientDisconnected() {
+    //client disconnedted
     client.leave('users')
 
     if (client.token) {
 
-      const config = {
-        url: '/v1/users/logout',
-        method: 'GET',
-        headers: {
-          authorization: `Bearer ${client.token}`
-        }
-      }
-      return requester.request(config)
-          .then(response => {
-            console.log(response.data)
+      BackendService.logout(client.token)
+          .then(() => {
+            SocketService.notifyOnlineUsersChanged(io)
           })
           .catch(err => {
             console.log(err.response.data)
           })
     }
 
+  }
 
-  })
 })
 
-server.listen(3001)
+
+server.listen(3001, function () {
+  console.log('socket started')
+})

@@ -1,12 +1,17 @@
 const enums = {
 
-  event_types: {
+  incoming_event_types: {
     LOGIN: 'LOGIN',
-    LOGGED_IN: 'LOGGED_IN',
-    LOGIN_RESPONSE: 'LOGIN_RESPONSE',
-    DATA: 'DATA'
-  }
+    SEND_EVENT:'SEND_EVENT'
+  },
 
+  outgoing_event_types: {
+    LOGGED_IN: 'LOGGED_IN',
+    USERS_CHANGED: 'USERS_CHANGED',
+    LOGIN_RESPONSE: 'LOGIN_RESPONSE',
+    REGISTERED_USER: 'REGISTERED_USER'
+
+  },
 
 }
 

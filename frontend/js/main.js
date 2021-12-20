@@ -9,7 +9,11 @@ const enums = {
   event_types: {
     LOGIN_RESPONSE: 'LOGIN_RESPONSE',
     CONNECTED_RESPONSE: 'CONNECTED_RESPONSE',
-    LOGGED_IN: 'LOGGED_IN'
+    LOGGED_IN: 'LOGGED_IN',
+    USERS_CHANGED: 'USERS_CHANGED'
+  },
+  incoming_event_types: {
+    USER_REGISTERED: 'USER_REGISTERED'
   }
 }
 
@@ -43,7 +47,21 @@ socket.on('event', event => {
         $('#onlineUser').append('<li class="list-group-item">User Logged In</li>')
       }
       break
-    default:
+
+    case enums.event_types.USERS_CHANGED:
+      if (pageState === enums.page_states.USER_LIST) {
+        listUsers()
+            .then(onlineUsers => updateOnlineUserGui(onlineUsers))
+      }
+      break
+
+    case enums.incoming_event_types.USER_REGISTERED:
+      if (pageState === enums.page_states.LOGGED_IN) {
+        $('#onlineUser').append(`<li class="list-group-item">${event.data.full_name} registered</li>`)
+      }
+      break
+
+    case enums.event_types.default:
       throw 'No Page'
 
   }
@@ -97,31 +115,8 @@ $('#userListPageClick').on('click', (e) => {
   setPageState(enums.page_states.USER_LIST)
 
 
-  listUsers().then(onlineUsers => {
-
-    $('#onlineUserTable tbody').empty()
-    onlineUsers.forEach(onlineUser => {
-      $('#onlineUserTable tbody').append(
-          `
-        <tr>
-            <td>${onlineUser._id}</td>
-            <td>${onlineUser.first_name}</td>
-            <td>${onlineUser.last_name}</td>
-            <td>${onlineUser.email}</td>
-            <td><a href="#" id="detailButton-${onlineUser._id}">Details</a></td>
-        </tr>
-                  
-        `
-      )
-      $(`#detailButton-${onlineUser._id}`).on('click', (e) => {
-        e.preventDefault()
-        getUserDetail(userId = onlineUser._id)
-      })
-
-
-    })
-
-  })
+  listUsers()
+      .then(onlineUsers => updateOnlineUserGui(onlineUsers))
 
 })
 
@@ -143,7 +138,6 @@ $('#userDetailPageBack').on('click', (e) => {
   e.preventDefault()
   setPageState(enums.page_states.USER_LIST)
 })
-
 
 
 // Functions
@@ -196,6 +190,31 @@ function getUserDetail(userId) {
     )
 
   }).catch(err => console.error(err))
+
+}
+
+function updateOnlineUserGui(onlineUsers) {
+  $('#onlineUserTable tbody').empty()
+  onlineUsers.forEach(onlineUser => {
+    $('#onlineUserTable tbody').append(
+        `
+        <tr>
+            <td>${onlineUser._id}</td>
+            <td>${onlineUser.first_name}</td>
+            <td>${onlineUser.last_name}</td>
+            <td>${onlineUser.email}</td>
+            <td><a href="#" id="detailButton-${onlineUser._id}">Details</a></td>
+        </tr>
+                  
+        `
+    )
+    $(`#detailButton-${onlineUser._id}`).on('click', (e) => {
+      e.preventDefault()
+      getUserDetail(userId = onlineUser._id)
+    })
+
+
+  })
 
 }
 

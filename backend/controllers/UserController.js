@@ -11,6 +11,7 @@ const User = require('./../models/User')
 const ApiError = require('./../dtos/ApiError')
 
 const catchAsync = require('./../libs/catchAsync')
+const SocketService = require('../services/SocketService')
 
 
 const UserController = {
@@ -115,6 +116,7 @@ const UserController = {
     await userDoc.save()
 
     // @TODO: socket handle
+    SocketService.sendUserRegistered(full_name)
 
     return res.json({
       success: true,

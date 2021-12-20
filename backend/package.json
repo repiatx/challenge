@@ -25,6 +25,7 @@
     "morgan": "^1.10.0",
     "random-hash": "^4.0.1",
     "slugify": "^1.6.2",
+    "socket.io-client": "^4.4.0",
     "uniqid": "^5.3.0",
     "winston": "^3.3.3",
     "winston-mongodb": "^5.0.7",
