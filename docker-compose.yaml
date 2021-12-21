@@ -1,0 +1,41 @@
+version: '3.4'
+
+services:
+  backend:
+    build:
+      context: ./backend/
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+
+  socket:
+    build:
+      context: ./socket/
+    ports:
+      - "3001:3001"
+    depends_on:
+      - backend
+
+  front-end:
+    image: nginx
+    ports:
+      - 8000:80
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+
+  mongo:
+    image: mongo:4
+    volumes:
+      - challange_db_volume:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 426426
+      MONGO_DATABASE: challange
+    ports:
+      - 27017:27017
+
+volumes:
+  challange_db_volume: null
