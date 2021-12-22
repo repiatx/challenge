@@ -24,7 +24,7 @@ Challange requires [Node.js](https://nodejs.org/) v16+ to run.
 
 first clone 
 ```sh
-$ https://github.com/repiatx/challenge.git
+$ git clone https://github.com/repiatx/challenge.git
 $ cd challenge
 ```
 
